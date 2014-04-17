@@ -1,4 +1,4 @@
-// Lingvoj
+// Ekludo
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
 //
@@ -15,33 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This file contains every language functions.
+// This file launches every functions needed to play.
+
 
 (function (){
 
-	// TODO:  For now this is temporary, just to make it work.
-	var lang = "en"
+	{ // Setting up the interface.
+		var lang = Spegularo.langObj
 
-	// This function takes an identifer (as a text form) and some eventual
-	// additionnal arguments (strings).  It returns a string representing the
-	// corresponding text, eventually evaluated with the additionnal arguments,
-	// which correspond to hole in the translation.
-	function getText (id){
-		// TODO:  For now this is temporary, just to make this module work.
-		switch (id){
-			case "inventary":
-				return "Inventary:"
-			case "colon":
-				return ":"
-		}
+		Spegularo.messages.init (lang)
+		Spegularo.level.init (lang)
+		Spegularo.inventary.init (lang)
+		Spegularo.code.init (lang)
+		Spegularo.events.init (lang)
 	}
 
-	{ // Wrapping up everything.
-		Spegularo.addToContainer ([
-				{ n: "langObj", o: {
-						getText: getText
-					} }
-			])
-	}
 }())
 

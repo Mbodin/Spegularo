@@ -1,17 +1,17 @@
 // Spegularo
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
-// 
+//
 // Spegularo is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Spegularo is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
@@ -32,9 +32,9 @@ var Spegularo
 
 	// This object makes the interface with the drawn level.  It contains the
 	// following methods:
-	//	— setLevel, which takes a table of size sizeScreen of tainted characters
-	//	 ({ t: character (one character-string), c: color (string) }) and prints
-	//	 it.
+	//	— setLevel, which takes a table (x first) of size sizeScreen of
+	//	tainted characters ({ t: character (one character-string), c: color
+	//	(facultative string) }) and prints it.
 	//	— init, taking a language object and initialising the interface.
 	//	— quit, that removes the level from the HTML interface.  Any further
 	//	 call to any method of this object will then be invalid.
@@ -64,10 +64,9 @@ var Spegularo
 
 	// This object makes the interface with the event (i.e. game’s actions)
 	// display.  It contains the following methods:
-	//	— addEvents, taking a set of events ({ d: event description (string),
-	//	 s: source of the event (string) }) corresponding to the current turn
-	//	 and printing it, eventually removing the previous events of the
-	//	 interface.
+	//	— addEvents, taking a set of events ({ d: event description
+	//	(string) }) corresponding to the current turn and printing it,
+	//	eventually removing the previous events of the interface.
 	//	— init, taking a language object and initialising the interface.
 	//	— quit, that removes the level from the HTML interface.  Any further
 	//	 call to any method of this object will then be invalid.
@@ -76,9 +75,9 @@ var Spegularo
 	// This object makes the interface with the messages (i.e. various errors).
 	// It contains the following methods:
 	//	— addMessages, taking a set of messages ({ d: message (string),
-	//	 s: source of the message (string) }) corresponding to the current turn
-	//	 and printing it, eventually removing the previous events of the
-	//	 interface.
+	//	 s: source of the message (facultative string) }) corresponding to the
+	//	 current turn and printing it, eventually removing the previous events of
+	//	 the interface.
 	//	— init, taking a language object and initialising the interface.
 	//	— quit, that removes the level from the HTML interface.  Any further
 	//	 call to any method of this object will then be invalid.
@@ -93,17 +92,69 @@ var Spegularo
 			node.removeChild (childs[i])
 	}
 
+	// Adds a new text node to its first argument, with the text of the second.
 	function appendText (node, text){
 		node.appendChild (document.createTextNode (text))
 	}
 
-	function initLevel (div){
-		// TODO
+	function initLevel (main){
+		var level = document.createElement ("table")
+		var levelRef = []
+
+		for (var y = 0; y < sizeScreen.y; y++){
+			var line = document.createElement ("tr")
+			var lineRef = []
+
+			for (var x = 0; x < sizeScreen.x; x++){
+				var block = document.createElement ("td")
+
+				appendText (block, " ") // This is a non-breakable space.
+
+				line.appendChild (block)
+				lineRef[x] = block
+			}
+
+			level.appendChild (line)
+			levelRef[y] = lineRef
+		}
+		
+		level.setAttribute ("style",
+				"font-family: monospace;"
+				+ "border-collapse: collapse;"
+				+ "border: 1px;")
+		main.appendChild (level)
 
 		return {
-			setLevel: function (table){},
+			setLevel: function (table){
+					var error
+
+					for (var y = 0; y < sizeScreen.y; y++){
+						for (var x = 0; x < sizeScreen.x; x++){
+							var block = levelRef[y][x]
+							var tc = table[x][y]
+
+							clearNode (block)
+
+							if (tc){
+								if (tc.t === " ") // This is a normal space.
+									tc.t = " " // This is a non-breakable space.
+
+								var node = document.createTextNode (tc.t)
+								if (tc.c)
+									node.setAttribute ("style", "color: " + tc.c + ";")
+								block.appendChild (node)
+							} else error = { x: x, y: y }
+						}
+					}
+
+					if (error)
+						Spegularo.internalError ("setLevel",
+							"Giving a table without (" + error.x + ", " + error.y + ") coordinates.")
+				},
 			init: function (langObj){},
-			quit: function (){}
+			quit: function (){
+					main.removeChild (level)
+				}
 		}
 	}
 
@@ -118,7 +169,7 @@ var Spegularo
 					clearNode (array)
 
 					for (var i = 0; i < objects.length; i++){
-						array.appendText ("\t")
+						appendText (array, "\t")
 
 						var obj = objects[i]
 						var node = document.createTextNode (obj.t)
@@ -128,10 +179,10 @@ var Spegularo
 					}
 				},
 			init: function (langObj){
-					clearNode (node)
+					clearNode (block)
 					clearNode (array)
 
-					block.appendText (langObj.getText ("inventary"))
+					appendText (block, langObj.getText ("inventary"))
 					block.appendChild (array)
 				},
 			quit: function (){
@@ -140,7 +191,7 @@ var Spegularo
 		}
 	}
 
-	function initEdit (div){
+	function initEdit (main){
 		// TODO
 
 		return {
@@ -151,33 +202,74 @@ var Spegularo
 		}
 	}
 
-	function initEvents (div){
-		// TODO
+	function initEvents (main){
+		var events = document.createElement ("ul")
+
+		main.appendChild (events)
 
 		return {
-			addEvents: function (events){},
+			addEvents: function (events){
+					clearNode (messages)
+
+					Spegularo.iterTab (msgs, function(msg){
+							var node = document.createElement ("li")
+
+							messages.appendChild (node)
+
+							node.appendText (msg.d)
+						})
+				},
 			init: function (langObj){},
-			quit: function (){}
+			quit: function (){
+					main.removeChild (messages)
+				}
 		}
 	}
 
-	function initEvents (div){
-		// TODO
+	function initMessages (main){
+		var lang
+
+		var messages = document.createElement ("ul")
+		var errors = document.createElement ("ul")
+
+		main.appendChild (messages)
+		main.appendChild (errors)
 
 		return {
-			addEvents: function (events){},
-			init: function (langObj){},
-			quit: function (){}
-		}
-	}
+			addMessages: function (msgs){
+					clearNode (messages)
 
-	function initMessages (div){
-		// TODO
+					Spegularo.iterTab (msgs, function(msg){
+							var node = document.createElement ("li")
 
-		return {
-			addMessages: function (events){},
-			init: function (langObj){},
-			quit: function (){}
+							messages.appendChild (node)
+
+							if (msg.s){
+								node.appendText (msg.s)
+								node.appendText (lang.getText ("colon"))
+								node.appendText ("\t")
+							}
+							node.appendText (msg.d)
+						})
+				},
+			init: function (langObj){
+					lang = langObj
+
+					Spegularo.addToContainer ([
+							{ n: "internalError", o: function (f, msg){
+										var node = document.createElement ("li")
+				
+										errors.appendChild (node)
+										node.appendText (f)
+										node.appendText (lang.getText ("colon"))
+										node.appendText ("\t")
+										appendText (node, msg)
+									} }
+						])
+				},
+			quit: function (){
+					main.removeChild (messages)
+				}
 		}
 	}
 
@@ -204,10 +296,11 @@ var Spegularo
 		var directory = "skriptoj/"
 		var otherFiles = [
 				"utilajxoj",
-				"lingvoj"
+				"lingvoj",
+				"ekludo"
 			]
 
-		for (var i = 0; i < otherFiles; i++){
+		for (var i = 0; i < otherFiles.length; i++){
 			var script = document.createElement ("script")
 
 			script.setAttribute ("type", "text/javascript")
