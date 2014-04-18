@@ -19,11 +19,13 @@
 // Note that this is the one that loads everything else, and thus can’t
 // use commons’s functions from other files.
 
-// This object is the JavaScript one created by this file, and is the only
-// one to be exported.
-var Spegularo
-
-(function (){
+// This object is the one created by this file, and is the only object use
+// to communicate between the different scripts of this project.
+// This object will also be hidden in the end of the file “ekludo”: every
+// other file of this project will add it to a local closure to be able to
+// use it after the hiding.
+var Spegularo = (function (){
+	var Spegularo
 
 	var sizeScreen = { x: 70, y: 30 }
 
@@ -295,19 +297,34 @@ var Spegularo
 	{ // Adding other JavaScript files from the project.
 		var directory = "skriptoj/"
 		var otherFiles = [
-				"utilajxoj",
+				"utilajxoj", // This file should always be the first one.
 				"lingvoj",
-				"ekludo"
+				"mapo",
+				"nivelo",
+				"ekludo" // This file should always be the last one.
 			]
 
-		for (var i = 0; i < otherFiles.length; i++){
-			var script = document.createElement ("script")
+		// We want each of those scripts to be added and executed in order.
+		// We make use of the function “SetTimeOut” to force execution of the
+		// additionnal scripts.
+		setTimeout (function (){
+				function addScriptsFrom (i){
+					var script = document.createElement ("script")
 
-			script.setAttribute ("type", "text/javascript")
-			script.setAttribute ("src", directory + otherFiles[i] + ".js")
+					script.setAttribute ("type", "text/javascript")
+					script.setAttribute ("src", directory + otherFiles[i] + ".js")
 
-			mainId.appendChild (script)
-		}
+					mainId.appendChild (script)
+
+					if (i + 1 < otherFiles.length){
+						setTimeout (function (){
+								addScriptsFrom (i + 1)
+							}, 0)
+					}
+				}
+
+				addScriptsFrom (0)
+			}, 0)
 	}
 
 	{ // Enpacking everything into the object “Spegularo”.
@@ -321,5 +338,6 @@ var Spegularo
 			}
 	}
 
+	return Spegularo
 }())
 

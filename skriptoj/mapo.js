@@ -1,4 +1,4 @@
-// Ekludo
+// Mapo
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
 //
@@ -15,25 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This file launches every functions needed to play.
+// This file defines the map and its methods.
 
 
 (function (Spegularo){
 
-	{ // Setting up the interface.
-		var lang = Spegularo.langObj
-
-		Spegularo.messages.init (lang)
-		Spegularo.level.init (lang)
-		Spegularo.inventary.init (lang)
-		Spegularo.code.init (lang)
-		Spegularo.events.init (lang)
-	}
+	Spegularo.addToContainer ([
+		{ n: "Map", o: function (){
+				this.currentLevel // TODO
+			}
+		}])
 
 }(Spegularo))
-
-// This file is the last introduced in “Spegularo.js” and thus the last
-// to be executed.  Furthermore, we want this object to be hidden to any
-// further call (to avoid being hacked by a level o player code).
-Spegularo = undefined
 

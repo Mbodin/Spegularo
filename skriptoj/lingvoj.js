@@ -17,7 +17,7 @@
 //
 // This file contains every language functions.
 
-(function (){
+(function (Spegularo){
 
 	// TODO:  For now this is temporary, just to make it work.
 	var lang = "en"
@@ -43,5 +43,6 @@
 					} }
 			])
 	}
-}())
+
+}(Spegularo))
 

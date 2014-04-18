@@ -19,7 +19,7 @@
 // in the project.
 
 
-(function (){
+(function (Spegularo){
 
 	// Add to the object “Spegularo” the set of objects given as argument
 	// (as an array of { n: function name (string), o: function }).
@@ -50,5 +50,6 @@
 				{ n: "iterTab", o: iterTab}
 			])
 	}
-}())
+
+}(Spegularo))
 
