@@ -305,26 +305,24 @@ var Spegularo = (function (){
 			]
 
 		// We want each of those scripts to be added and executed in order.
-		// We make use of the function “SetTimeOut” to force execution of the
-		// additionnal scripts.
-		setTimeout (function (){
-				function addScriptsFrom (i){
-					var script = document.createElement ("script")
+		// We make use of the function “onload” to force execution of the
+		// additional scripts in order.
+		function addScriptsFrom (i){
+			var script = document.createElement ("script")
 
-					script.setAttribute ("type", "text/javascript")
-					script.setAttribute ("src", directory + otherFiles[i] + ".js")
+			script.setAttribute ("type", "text/javascript")
+			script.setAttribute ("src", directory + otherFiles[i] + ".js")
 
-					mainId.appendChild (script)
-
-					if (i + 1 < otherFiles.length){
-						setTimeout (function (){
-								addScriptsFrom (i + 1)
-							}, 0)
+			if (i + 1 < otherFiles.length){
+				script.onload = function (){
+						addScriptsFrom (i + 1)
 					}
-				}
+			}
 
-				addScriptsFrom (0)
-			}, 0)
+			mainId.appendChild (script)
+		}
+
+		addScriptsFrom (0)
 	}
 
 	{ // Enpacking everything into the object “Spegularo”.

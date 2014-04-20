@@ -69,11 +69,11 @@
 						Spegularo.mapArray2 (this.map, function (cell){
 								var o = getMin (cell.o, function (o1, o2){
 										return o1.depth < o2.depth
-									}, { t: " ", c: "black" }) // TODO:  Make color functions to avoid using such raw command for colors (and to easily use Tango theme ☺).
+									}, { character: " ", color: "black" }) // TODO:  Make color functions to avoid using such raw command for colors (and to easily use Tango theme ☺).
 
 								return {
-										t: o.t,
-										c: o.c
+										t: o.character,
+										c: o.color
 									}
 							}))
 				},
@@ -98,6 +98,7 @@
 				isActive: function (){
 					return this.numberOfActiveObjects > 0
 				}
+
 			}
 		}])
 
