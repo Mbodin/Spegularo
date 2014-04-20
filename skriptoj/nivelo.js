@@ -59,12 +59,44 @@
 					left: {}
 				},
 
-				// TODO: a “display” function and an internal table.
-				// TODO: default “generate” function, creating an empty table.
-				// TODO: Describe.
+				// This function displays the level using the interface.
+				// This default function uses an internal “map” table that have to
+				// be defined.  This table have to be of size Spegularo.sizeScreen, each
+				// cell being of the form { o: array of objects (see “objekto.js”
+				// for more precisions about objects) }.
+				display: function (){
+					Spegularo.level.setLevel (
+						Spegularo.mapArray2 (this.map, function (cell){
+								var o = getMin (cell.o, function (o1, o2){
+										return o1.depth < o2.depth
+									}, { t: " ", c: "black" }) // TODO:  Make color functions to avoid using such raw command for colors (and to easily use Tango theme ☺).
+
+								return {
+										t: o.t,
+										c: o.c
+									}
+							}))
+				},
+
+				// This function is a default function generating an empty map.
+				generate: function (){
+					this.map =
+						Spegularo.createArray2 (Spegularo.sizeScreen, function (){
+								return {
+										o: []
+									}
+							})
+				},
+
+				// Levels have different behaviours depending on weither there are still
+				// active objects in them.  This counter is there to trace the number of
+				// active objects present in this level.
 				numberOfActiveObjects: 0,
+
+				// Returns weither the level is active or not (i.e. weither there are
+				// more than one active object in it).
 				isActive: function (){
-					return numberOfActiveObjects > 0
+					return this.numberOfActiveObjects > 0
 				}
 			}
 		}])

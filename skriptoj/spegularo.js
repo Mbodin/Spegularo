@@ -213,7 +213,7 @@ var Spegularo = (function (){
 			addEvents: function (events){
 					clearNode (messages)
 
-					Spegularo.iterTab (msgs, function(msg){
+					Spegularo.iterArray (msgs, function(msg){
 							var node = document.createElement ("li")
 
 							messages.appendChild (node)
@@ -241,7 +241,7 @@ var Spegularo = (function (){
 			addMessages: function (msgs){
 					clearNode (messages)
 
-					Spegularo.iterTab (msgs, function(msg){
+					Spegularo.iterArray (msgs, function(msg){
 							var node = document.createElement ("li")
 
 							messages.appendChild (node)
