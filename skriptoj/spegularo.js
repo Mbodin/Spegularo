@@ -299,8 +299,10 @@ var Spegularo = (function (){
 		var otherFiles = [
 				"utilajxoj", // This file should always be the first one.
 				"lingvoj",
+				"koloroj",
 				"mapo",
 				"nivelo",
+				"objekto",
 				"ekludo" // This file should always be the last one.
 			]
 

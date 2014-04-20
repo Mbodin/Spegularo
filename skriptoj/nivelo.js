@@ -69,7 +69,10 @@
 						Spegularo.mapArray2 (this.map, function (cell){
 								var o = getMin (cell.o, function (o1, o2){
 										return o1.depth < o2.depth
-									}, { character: " ", color: "black" }) // TODO:  Make color functions to avoid using such raw command for colors (and to easily use Tango theme ☺).
+									}, {
+										character: " ",
+										color: Spegularo.colors.Aluminium (0)
+									})
 
 								return {
 										t: o.character,
@@ -97,6 +100,15 @@
 				// more than one active object in it).
 				isActive: function (){
 					return this.numberOfActiveObjects > 0
+				},
+
+				// TODO
+				function allActions (){
+					if (!this.isActive ())
+						return [] // If this level is not active, nothing should be executed
+							   // in it.
+
+					//
 				}
 
 			}

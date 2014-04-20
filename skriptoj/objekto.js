@@ -1,4 +1,4 @@
-// Mapo
+// Objekto
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
 //
@@ -27,7 +27,7 @@
 				character: " ",
 
 				// The color that should be used to represent the object on screen.
-				color: "black", // TODO:  Make color functions to avoid using such raw command for colors (and to easily use Tango theme ☺).
+				color: Spegularo.colors.Aluminium (0),
 
 				// The depth corresponds to the priority to be displayed: if more than
 				// one object is present in a given cell, only the one with the lesser
@@ -44,8 +44,42 @@
 				// time an object is created!).
 				inventary: [],
 
-				// TODO
-				type: ""
+				collisionConcrete: 0,
+				collisionTransportable: 1,
+				collisionScenery: 2,
+
+				// The three possibles types are:
+				//	— “static”: the object never moves.
+				//	— “dynamic”: the object only moves when its level is active.
+				//	— “active”: the object makes its level active.
+				typeStatic: 0,
+				typeDynamic: 1,
+				typeActive: 2,
+				type: 0,
+
+				// The speed corresponds to the frequency the behaviour function (see
+				// below) shall be called: a speed of 100 means that it would be called
+				// only every 100 turns.  100 is the default value, smaller values
+				// represent objects that moves faster.
+				speed: 100,
+
+				// This function is called every time the object “moves” (see the
+				// definition of the possibles types above).
+				// It should return action objects (see below), or undefined.
+				// This function can return an exception, which should be catched
+				// immediately, eventually adding some additionnal (bad) effects on the
+				// faulting object.
+				// By default, it naturally does nothing.
+				behaviour: function (){},
+
+				// Returns an action object to move the current object in the direction
+				// (“up”, “upleft”, “left”, “downleft”, “down”, “downright”, “right” or “upright”) given as argument.
+				move: function (dir){
+						return {
+								type: "move",
+								direction: dir
+							}
+					}
 
 			}
 		}])
