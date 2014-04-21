@@ -119,7 +119,7 @@ var Spegularo = (function (){
 			level.appendChild (line)
 			levelRef[y] = lineRef
 		}
-		
+
 		level.setAttribute ("style",
 				"font-family: monospace;"
 				+ "border-collapse: collapse;"
@@ -153,7 +153,10 @@ var Spegularo = (function (){
 						Spegularo.internalError ("setLevel",
 							"Giving a table without (" + error.x + ", " + error.y + ") coordinates.")
 				},
-			init: function (langObj){},
+			init: function (langObj){
+					level.setAttribute ("style",
+						"background-color: " + Spegularo.colors.Aluminium (0) + ";")
+				},
 			quit: function (){
 					main.removeChild (level)
 				}

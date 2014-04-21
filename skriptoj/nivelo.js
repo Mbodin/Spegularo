@@ -63,7 +63,8 @@
 				// This default function uses an internal “map” table that have to
 				// be defined.  This table have to be of size Spegularo.sizeScreen, each
 				// cell being of the form { o: array of objects (see “objekto.js”
-				// for more precisions about objects) }.
+				// for more precisions about objects), l: luminosity (an integer from 0
+				// to 6, 0 being the darker, 6 being the lighter) }.
 				display: function (){
 					Spegularo.level.setLevel (
 						Spegularo.mapArray2 (this.map, function (cell){
@@ -71,22 +72,29 @@
 										return o1.depth < o2.depth
 									}, {
 										character: " ",
-										color: Spegularo.colors.Aluminium (0)
+										color: Spegularo.colors.Aluminium
 									})
+								var col = o.color
+
+								if (typeof col === "function")
+									col = col (cell.l)
 
 								return {
 										t: o.character,
-										c: o.color
+										c: col
 									}
 							}))
 				},
 
-				// This function is a default function generating an empty map.
+				// This function is a default function generating an empty map (see
+				// function “display” above for more informations about the
+				// generated table).
 				generate: function (){
 					this.map =
 						Spegularo.createArray2 (Spegularo.sizeScreen, function (){
 								return {
-										o: []
+										o: [],
+										l: 6
 									}
 							})
 				},
@@ -103,10 +111,10 @@
 				},
 
 				// TODO
-				function allActions (){
+				allActions: function (){
 					if (!this.isActive ())
 						return [] // If this level is not active, nothing should be executed
-							   // in it.
+								  // in it.
 
 					//
 				}

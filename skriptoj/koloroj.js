@@ -46,6 +46,10 @@
 				break
 		}
 
+		for (var i = 0; i < 7; i++){
+			values[i] = "#" + values[i]
+		}
+
 		var arrayName = "array" + name
 
 		colors[arrayName] = values
