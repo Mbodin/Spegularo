@@ -126,6 +126,29 @@
 		return getMin (tab, function (a, b){ return compare (b, a) }, defaultRes)
 	}
 
+	// Returns a new empty object whose prototype is the object given as
+	// argument.
+	function extend (obj){
+		var c = function (){}
+		c.prototype = obj
+		return new c
+	}
+
+	// This function takes an object and a “prototype” object.  It returns
+	// an object whose prototype is this second object and whose every field
+	// has been copied (not cloned: this function is not recursive) from the
+	// first object given as argument.  Note that if some fields from the
+	// initial argument are not enumerable, they won’t be copied in the
+	// returned object.
+	function extendCopy (obj, proto){
+		var o = extend (proto)
+
+		for (var i in obj)
+			o[i] = obj[i]
+
+		return o
+	}
+
 	{ // Wrapping up everything.
 		addToContainer ([
 				{ n: "addToContainer", o: addToContainer },
@@ -135,7 +158,9 @@
 				{ n: "createArray", o: createArray },
 				{ n: "createArray2", o: createArray2 },
 				{ n: "getMin", o: getMin },
-				{ n: "getMax", o: getMax }
+				{ n: "getMax", o: getMax },
+				{ n: "extend", o: extend },
+				{ n: "extendCopy", o: extendCopy }
 			])
 	}
 

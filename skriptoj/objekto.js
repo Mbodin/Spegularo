@@ -21,7 +21,20 @@
 (function (Spegularo){
 
 	Spegularo.addToContainer ([
+		{ n: "objects", o: {
+				// This object contains every objects that can be use in any level.
+			} },
+		{ n: "createObject", o: function (name, obj){
+				// This function creates and add an object in “Spegularo.objects”.
+				if (name in Spegularo.objects)
+					Spegularo.internalError ("createObject",
+						"“" + name + "” already in object “Spegularo.objects”.")
+
+				Spegularo.objects[name] =
+					Spegularo.extendCopy (obj, Spegularo.ObjectPrototype)
+			} },
 		{ n: "ObjectPrototype", o: {
+				// This object is the prototype of every object present in any level.
 
 				// The character that should be used to represent the object on screen.
 				character: " ",

@@ -306,6 +306,7 @@ var Spegularo = (function (){
 				"mapo",
 				"nivelo",
 				"objekto",
+				"bazobjektoj", // This file should be after “objekto”.
 				"ekludo" // This file should always be the last one.
 			]
 

@@ -1,4 +1,4 @@
-// Mapo
+// Bazobjekto
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
 //
@@ -15,18 +15,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This file defines the map and its methods.
+// This file defines useful objects that can be added and useful in
+// basically every level.
 
 
 (function (Spegularo){
 
-	Spegularo.addToContainer ([
-		{ n: "Map", o: function (){
-				// This function is the constructor of map.
+	Spegularo.createObject ("road", {
+			// This object represents a simple road.
 
-				this.levels = [] // TODO
-			}
-		}])
+			character: ".",
+			color: Spegularo.colors.Aluminium,
+			depth: 10000,
+			collision: Spegularo.ObjectPrototype.collisionScenery,
+			type: Spegularo.ObjectPrototype.typeStatic,
+			speed: 10000 // Roads are not updated often… but that doesn’t mean
+						 // they should never be update: water falling on them may change
+						 // their state (for instance).
+
+		})
 
 }(Spegularo))
 
