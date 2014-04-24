@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This file contains every useful functions without precise function used
-// in the project.
+// This file contains every useful functions that can’t be linked with a
+// particular package.
 
 
 (function (Spegularo){
@@ -27,10 +27,82 @@
 		iterArray (functions, function (f){
 				if (f.n in Spegularo)
 					Spegularo.internalError ("addToContainer",
-						"“" + f.n + "” already in object “Spegularo”.")
+						"The object “" + f.n + "” already exists in object “Spegularo”.")
 
 				Spegularo[f.n] = f.o
 			})
+	}
+
+	// Create a new construction (like sum type or enumerations).  This allows
+	// to create clearer constructor names than “0”, “1”, etc.
+	// It takes as first argument the name of the newly created construction
+	// and as second argument the array of constructors names (array of
+	// strings).
+	// It will then generate in “Spegularo.constructions” a new object whose
+	// corresponding constructors fields will be assigned a value than can be
+	// equality-tested through the “===” operator, as well as the reverse
+	// table from values to constructor names (such that
+	// “Spegularo.constructions[Spegularo.constructions.name” will be equal
+	// to the string “"name"” if “name” if effectively the name of one
+	// constructor).
+	// It will also generate in the type’s object a field “constructors”
+	// (that is “Spegularo.constructions.name.constructors”) being an array
+	// of objects of the form { n: constructor name (string), v: constructor
+	// value } listing all constructor names and their associated values.
+	// To assign a particular value to a given constructor, it’s possible to,
+	// instead of giving a string as an element, it’s also possible to give
+	// an object of type { n: constructor name (string), v: constructor
+	// value }.  This value should be comparable through the “===” operator
+	// (that is not equal to “NaN”) and cannot be equal to the name of
+	// another constructor of the same construction, except for itself.  Of
+	// course, two name/value objects of the same constructor cannot have the
+	// same value or name, and a constructor cannot have as a name
+	// “constructors”.
+	// The array can be given as an array of string, an array of name/value
+	// objects, or a variegated one.  The created new constructors are garanted
+	// to be fresh.
+	// A third argument can be given to this function:  the name of one of the
+	// newly created constructor.  Its value will be returned in addition to
+	// the normal action of this function.  This is useful to return a default
+	// argument on creation.
+	function addConstruction (name, constructors, def){
+		if (name in Spegularo.constructions)
+			Spegularo.internalError ("addConstruction",
+				"The constructor “" + name + "” already exists in “Spegularo.constructions”.")
+
+		var obj = { constructors: [] }
+		Spegularo.constructions[name] = obj
+
+		var allValues = {}
+		var allNames = {}
+
+		Spegularo.iterArray (constructors, function (c){
+				if (typeof c === "object"){
+					allNames[c.n] = undefined
+					allValues[c.v] = undefined
+				} else allNames[c] = undefined
+			})
+
+		Spegularo.iterArray (constructors, function (c){
+				if (typeof c === "object"){
+					obj[c.n] = c.v
+					obj[c.v] = c.n
+					obj.constructors.push ({ n: c.n, v: c.v })
+				} else {
+					var v = 0
+
+					while (v in allValues || v in allNames)
+						v++
+					allValues[v] = undefined
+
+					obj[c] = v
+					obj[v] = c
+					obj.constructors.push ({ n: c, v: v })
+				}
+			})
+
+		if (def !== undefined)
+			return obj[def]
 	}
 
 	// Iter on the array given as first argument the function given as
@@ -152,6 +224,8 @@
 	{ // Wrapping up everything.
 		addToContainer ([
 				{ n: "addToContainer", o: addToContainer },
+				{ n: "constructions", o: {} },
+				{ n: "addConstruction", o: addConstruction },
 				{ n: "iterArray", o: iterArray },
 				{ n: "mapArray", o: mapArray },
 				{ n: "mapArray2", o: mapArray2 },

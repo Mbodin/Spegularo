@@ -24,7 +24,7 @@
 		{ n: "LevelPrototype", o: {
 				// This object is the prototype of every level.
 
-				// Every level stores pointers to its neighbours levels.
+				// Every level stores pointers to its neighbouring levels.
 				neighbours: {
 					up: null,
 					right: null,

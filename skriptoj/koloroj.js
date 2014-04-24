@@ -44,11 +44,14 @@
 			case 7:
 				values = init
 				break
+			default:
+				Spegularo.internalError ("addColor",
+					"Invalid color tab size: " + init.length + ".")
 		}
 
-		for (var i = 0; i < 7; i++){
-			values[i] = "#" + values[i]
-		}
+		Spegularo.iterArray (values, function (v, _, i){
+				values[i] = "#" + v
+			})
 
 		var arrayName = "array" + name
 

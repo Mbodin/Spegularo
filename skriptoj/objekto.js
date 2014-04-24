@@ -77,19 +77,21 @@
 				//	 an inventory—it just means that there is no automatic action taken
 				//	 by the level when another object appears.  Don’t be mistaken
 				//	 because of the name!
-				collisionConcrete: 0,
-				collisionTransportable: 1,
-				collisionScenery: 2,
-				collision: 2,
+				collision: Spegularo.addConstruction ("collision", [
+						"collisionConcrete",
+						"collisionTransportable",
+						"collisionScenery"],
+					"collisionScenery"),
 
 				// The three possibles types are (the default is “static”):
 				//	— “static”: the object never moves.
 				//	— “dynamic”: the object only moves when its level is active.
 				//	— “active”: the object makes its level active.
-				typeStatic: 0,
-				typeDynamic: 1,
-				typeActive: 2,
-				type: 0,
+				type: Spegularo.addConstruction ("objectType", [
+						"static",
+						"dynamic",
+						"active"],
+					"static"),
 
 				// The speed corresponds to the frequency the behaviour function (see
 				// below) shall be called: a speed of 100 means that it would be called
@@ -98,7 +100,7 @@
 				speed: 100,
 
 				// This function is called every time the object “moves” (see the
-				// definition of the possibles types above).
+				// definition of the constructors below).
 				// It should return action objects (see below), or undefined.
 				// This function can return an exception, which should be catched
 				// immediately, eventually adding some additionnal (bad) effects on the
@@ -106,32 +108,11 @@
 				// By default, it naturally does nothing.
 				behaviour: function (){},
 
-				// In case the neighbourhood changed in between an action was asked and
-				// the action was performed (i.e. a change of an object in the initial
-				// cell or the destination), some precise actions could want to be
-				// cancelled (such as if the neighbourhood is dangerous if the object
-				// would do something a little different from what expected).
-				// Actions can specify a specific value for such subtleties in the
-				// actions.  The cancel value can be the followings:
-				//	— “noCancel”: the action won’t be cancelled, whatever
-				//	 happened.
-				//	— “cancelIfCellChanged”: the action will be cancelled if the
-				//	 current cell or the target cell changed (though the addition or
-				//	 deletion of an object).
-				//	— “cancelIfAnObjectChanged”: the action will be cancelled if the
-				//	 current cell or the target cell have an object that changed.
-				//	— “cancelIfObjectChanged”: cancels if the current object
-				//	changed.
-				noCancel: 0,
-				cancelIfCellChanged: 1,
-				cancelIfAnObjectChanged: 2,
-				cancelIfObjectChanged: 3,
-
 				// Returns an action object to move the current object in the direction
 				// (“up”, “upleft”, “left”, “downleft”, “down”, “downright”, “right” or “upright”) given as argument.
 				move: function (dir, cancel){
 						if (cancel === undefined)
-							cancel = this.noCancel
+							cancel = Spegularo.constructions.cancel.noCancel
 
 						return {
 								type: "move",
@@ -142,6 +123,28 @@
 
 			}
 		}])
+
+	{ // Other construction definitions.
+		// In case the neighbourhood changed in between an action was asked and the
+		// action was performed (i.e. a change of an object in the initial cell or
+		// the destination), some precise actions could want to be cancelled (such
+		// as if the neighbourhood is dangerous if the object would do something a
+		// little different from what expected).
+		// Actions can specify a specific value for such subtleties in the actions.
+		// The cancel value can be the followings:
+		//	— “noCancel”: the action won’t be cancelled, whatever happened.
+		//	— “cancelIfCellChanged”: the action will be cancelled if the
+		//	 current cell or the target cell changed (though the addition or
+		//	 deletion of an object).
+		//	— “cancelIfAnObjectChanged”: the action will be cancelled if the
+		//	 current cell or the target cell have an object that changed.
+		//	— “cancelIfObjectChanged”: cancels if the current object changed.
+		Spegularo.addConstruction ("cancel", [
+				"no",
+				"ifCellChanged",
+				"ifAnObjectChanged",
+				"ifObjectChanged"])
+	}
 
 }(Spegularo))
 

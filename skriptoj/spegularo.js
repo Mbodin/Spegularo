@@ -216,7 +216,7 @@ var Spegularo = (function (){
 			addEvents: function (events){
 					clearNode (messages)
 
-					Spegularo.iterArray (msgs, function(msg){
+					Spegularo.iterArray (msgs, function (msg){
 							var node = document.createElement ("li")
 
 							messages.appendChild (node)
@@ -262,6 +262,11 @@ var Spegularo = (function (){
 
 					Spegularo.addToContainer ([
 							{ n: "internalError", o: function (f, msg){
+										// Function to be used to report an error.
+										// The first argument is the function name in which the error has
+										// occurred.  The second is the message (a string).
+										// This should only be used to report errors, not warnings.
+
 										var node = document.createElement ("li")
 				
 										errors.appendChild (node)
