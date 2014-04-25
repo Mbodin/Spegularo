@@ -24,14 +24,29 @@
 		{ n: "objects", o: {
 				// This object contains every objects that can be use in any level.
 			} },
-		{ n: "createObject", o: function (name, obj){
-				// This function creates and add an object in “Spegularo.objects”.
+		{ n: "createObject", o: function (name, constructor){
+				// This function creates and add a constant object in
+				// “Spegularo.objects”.  In this most general case, objects are
+				// given by a function returning a new object.  This function takes care
+				// that the prototype of this object is to be well set.
+				// It takes as argument the name of the object to be created and an
+				// initiator function, returning an object.
 				if (name in Spegularo.objects)
 					Spegularo.internalError ("createObject",
 						"“" + name + "” already in object “Spegularo.objects”.")
 
-				Spegularo.objects[name] =
-					Spegularo.extendCopy (obj, Spegularo.ObjectPrototype)
+				Spegularo.objects[name] = function (){
+						return Spegularo.extendCopy
+							(constructor (), Spegularo.ObjectPrototype)
+					}
+			} },
+		{ n: "createSimpleObject", o: function (name, obj){
+				// In most cases, objects are not complex enough to need to be generated
+				// by a function.  This function thus creates and add a constant object
+				// in “Spegularo.objects”.
+				// It takes as argument the name of the object to be created and an
+				// object that will be used at each request of such an object.
+				Spegularo.createObject (name, Spegularo.constant (obj))
 			} },
 		{ n: "ObjectPrototype", o: {
 				// This object is the prototype of every object present in any level.

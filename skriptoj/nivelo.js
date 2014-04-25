@@ -21,6 +21,18 @@
 (function (Spegularo){
 
 	Spegularo.addToContainer ([
+		{ n: "levels", o: {
+				// This object contains every levels of the game.
+			} },
+		{ n: "createLevel", o: function (name, obj){
+				// This function creates and add a level in “Spegularo.levels”.
+				if (name in Spegularo.levels)
+					Spegularo.internalError ("createLevel",
+						"“" + name + "” already in object “Spegularo.levels”.")
+
+				Spegularo.levels[name] =
+					Spegularo.extendCopy (obj, Spegularo.LevelPrototype)
+			} },
 		{ n: "LevelPrototype", o: {
 				// This object is the prototype of every level.
 
@@ -69,7 +81,7 @@
 				display: function (){
 					Spegularo.level.setLevel (
 						Spegularo.mapArray2 (this.map, function (cell){
-								var o = getMin (cell.o, function (o1, o2){
+								var o = Spegularo.getMin (cell.o, function (o1, o2){
 										return o1.depth < o2.depth
 									}, {
 										character: " ",
@@ -92,12 +104,10 @@
 				// generated table).
 				generate: function (){
 					this.map =
-						Spegularo.createArray2 (Spegularo.sizeScreen, function (){
-								return {
-										o: [],
-										l: 6
-									}
-							})
+						Spegularo.createArray2 (Spegularo.sizeScreen, Spegularo.constant ({
+								o: [],
+								l: 6
+							}, true, true, true))
 				},
 
 				// Levels have different behaviours depending on weither there are still

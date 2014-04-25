@@ -1,4 +1,4 @@
-// Ekludo
+// Niveloj
 // This file is part of Spegularo.
 // © Copyright 2014, Martin Bodin
 //
@@ -15,35 +15,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Spegularo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This file launches every functions needed to play.
+// This file defines some levels of the game.
 
 
 (function (Spegularo){
 
-	{ // Setting up the interface.
-		var lang = Spegularo.langObj
+	Spegularo.createLevel ("testLevel", {
+			// TODO: This is just a test…
+			generate: function (){
+					Spegularo.LevelPrototype.generate.call (this)
 
-		Spegularo.messages.init (lang)
-		Spegularo.level.init (lang)
-		Spegularo.inventary.init (lang)
-		Spegularo.code.init (lang)
-		Spegularo.events.init (lang)
-	}
-
-	{ // Starting up the game.
-		var map = new Spegularo.Map
-
-		// TODO
-		// SetInterval (function (){
-		//	while (!Spegularo.player.canPlay ())
-		//	 map.play ()
-		//	, interval)
-	}
+					for (var x = 10; x < 42; x++)
+						for (var y = 10; y < 12; y++)
+							this.map [x][y].o.push (Spegularo.objects.road ())
+				}
+		})
 
 }(Spegularo))
-
-// This file is the last introduced in “Spegularo.js” and thus the last
-// to be executed.  Furthermore, we want this object to be hidden to any
-// further call (to avoid being hacked by a level o player code).
-Spegularo = undefined
 

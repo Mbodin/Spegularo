@@ -143,7 +143,7 @@ var Spegularo = (function (){
 
 								var node = document.createTextNode (tc.t)
 								if (tc.c)
-									node.setAttribute ("style", "color: " + tc.c + ";")
+									block.setAttribute ("style", "color: " + tc.c + ";")
 								block.appendChild (node)
 							} else error = { x: x, y: y }
 						}
@@ -312,6 +312,7 @@ var Spegularo = (function (){
 				"nivelo",
 				"objekto",
 				"bazobjektoj", // This file should be after “objekto”.
+				"niveloj", // This file should be after “nivelo” and “bazobjektoj”.
 				"ekludo" // This file should always be the last one.
 			]
 

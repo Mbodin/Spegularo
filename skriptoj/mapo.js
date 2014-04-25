@@ -24,7 +24,15 @@
 		{ n: "Map", o: function (){
 				// This function is the constructor of map.
 
-				this.levels = [] // TODO
+				var initialLevel = Spegularo.levels.testLevel // TODO: this is just temporary…
+
+				initialLevel.generate ()
+
+				this.levels = [initialLevel]
+				this.allActiveLevels = [initialLevel]
+
+				// TODO
+				initialLevel.display ()
 			}
 		}])
 

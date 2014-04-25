@@ -21,7 +21,7 @@
 
 (function (Spegularo){
 
-	Spegularo.createObject ("road", {
+	Spegularo.createSimpleObject ("road", {
 			// This object represents a simple road.
 
 			character: ".",

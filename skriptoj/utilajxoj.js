@@ -41,10 +41,11 @@
 	// It will then generate in “Spegularo.constructions” a new object whose
 	// corresponding constructors fields will be assigned a value than can be
 	// equality-tested through the “===” operator, as well as the reverse
-	// table from values to constructor names (such that
+	// table from all string values to constructor names (such that
 	// “Spegularo.constructions[Spegularo.constructions.name” will be equal
 	// to the string “"name"” if “name” if effectively the name of one
-	// constructor).
+	// constructor).  Non string values won’t be present in this reverse
+	// table.
 	// It will also generate in the type’s object a field “constructors”
 	// (that is “Spegularo.constructions.name.constructors”) being an array
 	// of objects of the form { n: constructor name (string), v: constructor
@@ -96,7 +97,8 @@
 					allValues[v] = undefined
 
 					obj[c] = v
-					obj[v] = c
+					if (typeof v === "string")
+						obj[v] = c
 					obj.constructors.push ({ n: c, v: v })
 				}
 			})
@@ -105,9 +107,9 @@
 			return obj[def]
 	}
 
-	// Iter on the array given as first argument the function given as
-	// second argument.  This function can also take a second argument, passed
-	// on all along the array, with initial value given as third
+	// Iterate on the array given as first argument the function given as
+	// second argument.  This function last can also take a second argument,
+	// passed on all along the array, with initial value given as third
 	// (facultative) argument of this function.  The given function can also
 	// take a third argument, the current index.
 	function iterArray (tab, f, accumulator){
@@ -147,10 +149,8 @@
 	function createArray (size, f, identical){
 		var tab = []
 
-		if (typeof f !== "function" || identical){
-			var c = f
-			f = function (){ return c }
-		}
+		if (typeof f !== "function" || identical)
+			f = constant (f)
 
 		for (var i = 0; i < size; i++){
 			tab[i] = f (i)
@@ -163,13 +163,75 @@
 	// dimensional array.  The size should be given through a { x: integer,
 	// y: integer } object.
 	function createArray2 (size, f, identical){
-		if (typeof f !== "function" || identical){
-			var c = f
-			f = function (){ return c }
-		}
+		if (typeof f !== "function" || identical)
+			f = constant (f)
 
 		return createArray (size.x, function (x){
-			createArray (size.y, function (y){ return f (x, y) })})
+			return createArray (size.y, function (y){
+				return f (x, y) })})
+	}
+
+	// This function clones an object: it returns an object whose enumerable
+	// properties are the same and have the same values than the original
+	// object.
+	// If the object is an array, it will also return an array.
+	// If the second (facultative) argument is true, then this cloning will be
+	// recursive on every subobjects of the given object.  Note that it won’t
+	// have effect on functions.
+	// If the second argument is a function, then this function will be called
+	// every time the current property value is an object that would be clone
+	// if the second argument was true (that is, not a function), with argument
+	// the name of the current property.  If it returns true, then this
+	// subobject will also be cloned.
+	// If a third optionnal argument is true, it will only copy the properties
+	// of the exact object, not the ones of its prototype chain.  In that case
+	// the returned object will have the cloned object in its prototype chain.
+	// However, this won’t be the case for array objects.
+	// To cancel this last addition of the object into the protype chain, a
+	// fourth optionnal argument can be set to true.
+	function clone (obj, recursively, own, cancelPrototype){
+		if (typeof recursively !== "function")
+			recursively = constant (recursively)
+
+		var ret = {}
+
+		if (own && !cancelPrototype)
+			ret = extend (obj)
+
+		if (Array.isArray (obj))
+			ret = []
+
+		for (var x in obj){
+			if (own && !obj.hasOwnProperty (x)) continue
+
+			if (typeof obj[x] === "object" &&
+					obj[x] !== null &&
+					recursively (x))
+				ret[x] = clone (obj[x], recursively, own, cancelPrototype)
+			else ret[x] = obj[x]
+		}
+
+		return ret
+	}
+
+	// Takes a value and returns a function constant to this value.
+	// If a second (facultative) argument is true, then the objects will be
+	// cloned (see function above) at each call.
+	// Every additionnal argument will be given to the function “clone” as
+	// they appear (see function “clone” for more details).
+	function constant (c, cl){
+		if (cl){
+			var args = [c]
+			for (var i = 2; i < arguments.length; i++)
+				args.push (arguments[i])
+
+			return function (){
+					return clone.apply (this, args)
+				}
+		}
+		else return function (){
+				return c
+			}
 	}
 
 	// Returns the minimum value in the given array.  A comparable function can
@@ -184,7 +246,7 @@
 		if (tab.length === 0)
 			return defaultRes
 
-		iterArray (tab, function (v, res){
+		return iterArray (tab, function (v, res){
 				if (compare (v, res))
 					return v
 				else
@@ -231,6 +293,8 @@
 				{ n: "mapArray2", o: mapArray2 },
 				{ n: "createArray", o: createArray },
 				{ n: "createArray2", o: createArray2 },
+				{ n: "clone", o: clone },
+				{ n: "constant", o: constant },
 				{ n: "getMin", o: getMin },
 				{ n: "getMax", o: getMax },
 				{ n: "extend", o: extend },
