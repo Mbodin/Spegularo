@@ -155,7 +155,7 @@ var Spegularo = (function (){
 				},
 			init: function (langObj){
 					level.setAttribute ("style",
-						"background-color: " + Spegularo.colors.Aluminium (0) + ";")
+						"background-color: " + Spegularo.Colors.Aluminium (0) + ";")
 				},
 			quit: function (){
 					main.removeChild (level)
@@ -340,11 +340,11 @@ var Spegularo = (function (){
 	{ // Enpacking everything into the object “Spegularo”.
 		Spegularo = {
 				sizeScreen: sizeScreen,
-				level: level,
-				inventary: inventary,
-				code: code,
-				events: events,
-				messages: messages
+				Level: level,
+				Inventary: inventary,
+				Code: code,
+				Events: events,
+				Messages: messages
 			}
 	}
 

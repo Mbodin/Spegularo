@@ -19,22 +19,24 @@
 
 
 (function (Spegularo){
+	with (Spegularo){
 
-	Spegularo.addToContainer ([
-		{ n: "Map", o: function (){
-				// This function is the constructor of map.
+		addToContainer ([
+			{ n: "Map", o: function (){
+					// This function is the constructor of map.
 
-				var initialLevel = Spegularo.levels.testLevel // TODO: this is just temporary…
+					var initialLevel = levels.testLevel // TODO: this is just temporary…
 
-				initialLevel.generate ()
+					initialLevel.generate ()
 
-				this.levels = [initialLevel]
-				this.allActiveLevels = [initialLevel]
+					this.levels = [initialLevel]
+					this.allActiveLevels = [initialLevel]
 
-				// TODO
-				initialLevel.display ()
-			}
-		}])
+					// TODO
+					initialLevel.display ()
+				}
+			}])
 
+	}
 }(Spegularo))
 

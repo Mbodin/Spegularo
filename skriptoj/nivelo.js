@@ -19,119 +19,121 @@
 
 
 (function (Spegularo){
+	with (Spegularo){
 
-	Spegularo.addToContainer ([
-		{ n: "levels", o: {
-				// This object contains every levels of the game.
-			} },
-		{ n: "createLevel", o: function (name, obj){
-				// This function creates and add a level in “Spegularo.levels”.
-				if (name in Spegularo.levels)
-					Spegularo.internalError ("createLevel",
-						"“" + name + "” already in object “Spegularo.levels”.")
+		addToContainer ([
+			{ n: "Levels", o: {
+					// This object contains every levels of the game.
+				} },
+			{ n: "createLevel", o: function (name, obj){
+					// This function creates and add a level in “Levels”.
+					if (name in Levels)
+						internalError ("createLevel",
+							"“" + name + "” already in object “Levels”.")
 
-				Spegularo.levels[name] =
-					Spegularo.extendCopy (obj, Spegularo.LevelPrototype)
-			} },
-		{ n: "LevelPrototype", o: {
-				// This object is the prototype of every level.
+					Levels[name] =
+						extendCopy (obj, LevelPrototype)
+				} },
+			{ n: "LevelPrototype", o: {
+					// This object is the prototype of every level.
 
-				// Every level stores pointers to its neighbouring levels.
-				neighbours: {
-					up: null,
-					right: null,
-					down: null,
-					left: null
-				},
+					// Every level stores pointers to its neighbouring levels.
+					neighbours: {
+						up: null,
+						right: null,
+						down: null,
+						left: null
+					},
 
-				// A level should give lists (one for every direction) of levels to be
-				// added next to them if the player goes in this particular direction
-				// while no level has been defined in this direction in the
-				// “neighbours” object.
-				// If no level if given, the player can’t go in this direction.
-				nextLevels: {
-					up: [],
-					right: [],
-					down: [],
-					left: []
-				},
+					// A level should give lists (one for every direction) of levels to be
+					// added next to them if the player goes in this particular direction
+					// while no level has been defined in this direction in the
+					// “neighbours” object.
+					// If no level if given, the player can’t go in this direction.
+					nextLevels: {
+						up: [],
+						right: [],
+						down: [],
+						left: []
+					},
 
-				// A level can send some informations for its neighbour levels by
-				// leaving it some “hints”.  These hints can be everything, but they
-				// are usually indications on what has been put in the other side (such
-				// as walkways coordinates or such things).
-				// Hints are stored in a level for its neighbours: levels do not edits
-				// theirs neighbours!
-				// Note that those objects in the prototype should not be edited without
-				// good reasons: by default, levels have to create new hints objects
-				// for their neighbours.
-				hints: {
-					up: {},
-					right: {},
-					down: {},
-					left: {}
-				},
+					// A level can send some informations for its neighbour levels by
+					// leaving it some “hints”.  These hints can be everything, but they
+					// are usually indications on what has been put in the other side (such
+					// as walkways coordinates or such things).
+					// Hints are stored in a level for its neighbours: levels do not edits
+					// theirs neighbours!
+					// Note that those objects in the prototype should not be edited without
+					// good reasons: by default, levels have to create new hints objects
+					// for their neighbours.
+					hints: {
+						up: {},
+						right: {},
+						down: {},
+						left: {}
+					},
 
-				// This function displays the level using the interface.
-				// This default function uses an internal “map” table that have to
-				// be defined.  This table have to be of size Spegularo.sizeScreen, each
-				// cell being of the form { o: array of objects (see “objekto.js”
-				// for more precisions about objects), l: luminosity (an integer from 0
-				// to 6, 0 being the darker, 6 being the lighter) }.
-				display: function (){
-					Spegularo.level.setLevel (
-						Spegularo.mapArray2 (this.map, function (cell){
-								var o = Spegularo.getMin (cell.o, function (o1, o2){
-										return o1.depth < o2.depth
-									}, {
-										character: " ",
-										color: Spegularo.colors.Aluminium
-									})
-								var col = o.color
+					// This function displays the level using the interface.
+					// This default function uses an internal “map” table that have to
+					// be defined.  This table have to be of size sizeScreen, each cell
+					// being of the form { o: array of objects (see “objekto.js” for
+					// more precisions about objects), l: luminosity (an integer from 0 to
+					// 6, 0 being the darker, 6 being the lighter) }.
+					display: function (){
+						Level.setLevel (
+							mapArray2 (this.map, function (cell){
+									var o = getMin (cell.o, function (o1, o2){
+											return o1.depth < o2.depth
+										}, {
+											character: " ",
+											color: Colors.Aluminium
+										})
+									var col = o.color
 
-								if (typeof col === "function")
-									col = col (cell.l)
+									if (typeof col === "function")
+										col = col (cell.l)
 
-								return {
-										t: o.character,
-										c: col
-									}
-							}))
-				},
+									return {
+											t: o.character,
+											c: col
+										}
+								}))
+					},
 
-				// This function is a default function generating an empty map (see
-				// function “display” above for more informations about the
-				// generated table).
-				generate: function (){
-					this.map =
-						Spegularo.createArray2 (Spegularo.sizeScreen, Spegularo.constant ({
-								o: [],
-								l: 6
-							}, true, true, true))
-				},
+					// This function is a default function generating an empty map (see
+					// function “display” above for more informations about the
+					// generated table).
+					generate: function (){
+						this.map =
+							createArray2 (sizeScreen, constant ({
+									o: [],
+									l: 6
+								}, true, true, true))
+					},
 
-				// Levels have different behaviours depending on weither there are still
-				// active objects in them.  This counter is there to trace the number of
-				// active objects present in this level.
-				numberOfActiveObjects: 0,
+					// Levels have different behaviours depending on weither there are still
+					// active objects in them.  This counter is there to trace the number of
+					// active objects present in this level.
+					numberOfActiveObjects: 0,
 
-				// Returns weither the level is active or not (i.e. weither there are
-				// more than one active object in it).
-				isActive: function (){
-					return this.numberOfActiveObjects > 0
-				},
+					// Returns weither the level is active or not (i.e. weither there are
+					// more than one active object in it).
+					isActive: function (){
+						return this.numberOfActiveObjects > 0
+					},
 
-				// TODO
-				allActions: function (){
-					if (!this.isActive ())
-						return [] // If this level is not active, nothing should be executed
-								  // in it.
+					// TODO
+					allActions: function (){
+						if (!this.isActive ())
+							return [] // If this level is not active, nothing should be executed
+									  // in it.
 
-					//
+						//
+					}
+
 				}
+			}])
 
-			}
-		}])
-
+	}
 }(Spegularo))
 

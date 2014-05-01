@@ -20,20 +20,22 @@
 
 
 (function (Spegularo){
+	with (Spegularo){
 
-	Spegularo.createSimpleObject ("road", {
-			// This object represents a simple road.
+		createSimpleObject ("road", {
+				// This object represents a simple road.
 
-			character: ".",
-			color: Spegularo.colors.Aluminium,
-			depth: 10000,
-			collision: Spegularo.ObjectPrototype.collisionScenery,
-			type: Spegularo.ObjectPrototype.typeStatic,
-			speed: 10000 // Roads are not updated often… but that doesn’t mean
-						 // they should never be update: water falling on them may change
-						 // their state (for instance).
+				character: ".",
+				color: Colors.Aluminium,
+				depth: 10000,
+				collision: ObjectPrototype.collisionScenery,
+				type: ObjectPrototype.typeStatic,
+				speed: 10000 // Roads are not updated often… but that doesn’t mean
+							 // they should never be update: water falling on them may change
+							 // their state (for instance).
 
-		})
+			})
 
+	}
 }(Spegularo))
 

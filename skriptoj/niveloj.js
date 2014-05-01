@@ -19,8 +19,9 @@
 
 
 (function (Spegularo){
+	with (Spegularo){
 
-	Spegularo.createLevel ("testLevel", {
+	createLevel ("testLevel", {
 			// TODO: This is just a test…
 			generate: function (){
 					Spegularo.LevelPrototype.generate.call (this)
@@ -31,5 +32,6 @@
 				}
 		})
 
+	}
 }(Spegularo))
 

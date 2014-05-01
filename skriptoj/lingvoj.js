@@ -18,31 +18,33 @@
 // This file contains every language functions.
 
 (function (Spegularo){
+	with (Spegularo){
 
-	// TODO:  For now this is temporary, just to make it work.
-	var lang = "en"
+		// TODO:  For now this is temporary, just to make it work.
+		var lang = "en"
 
-	// This function takes an identifer (as a text form) and some eventual
-	// additionnal arguments (strings).  It returns a string representing the
-	// corresponding text, eventually evaluated with the additionnal arguments,
-	// which correspond to hole in the translation.
-	function getText (id){
-		// TODO:  For now this is temporary, just to make this module work.
-		switch (id){
-			case "inventary":
-				return "Inventary:"
-			case "colon":
-				return ":"
+		// This function takes an identifer (as a text form) and some eventual
+		// additionnal arguments (strings).  It returns a string representing the
+		// corresponding text, eventually evaluated with the additionnal arguments,
+		// which correspond to hole in the translation.
+		function getText (id){
+			// TODO:  For now this is temporary, just to make this module work.
+			switch (id){
+				case "inventary":
+					return "Inventary:"
+				case "colon":
+					return ":"
+			}
 		}
-	}
 
-	{ // Wrapping up everything.
-		Spegularo.addToContainer ([
-				{ n: "langObj", o: {
-						getText: getText
-					} }
-			])
-	}
+		{ // Wrapping up everything.
+			addToContainer ([
+					{ n: "LangObj", o: {
+							getText: getText
+						} }
+				])
+		}
 
+	}
 }(Spegularo))
 

@@ -19,27 +19,29 @@
 
 
 (function (Spegularo){
+	with (Spegularo){
 
-	{ // Setting up the interface.
-		var lang = Spegularo.langObj
+		{ // Setting up the interface.
+			var lang = LangObj
 
-		Spegularo.messages.init (lang)
-		Spegularo.level.init (lang)
-		Spegularo.inventary.init (lang)
-		Spegularo.code.init (lang)
-		Spegularo.events.init (lang)
+			Messages.init (lang)
+			Level.init (lang)
+			Inventary.init (lang)
+			Code.init (lang)
+			Events.init (lang)
+		}
+
+		{ // Starting up the game.
+			var map = new Map
+
+			// TODO
+			// SetInterval (function (){
+			//	while (!Spegularo.player.canPlay ())
+			//	 map.play ()
+			//	, interval)
+		}
+
 	}
-
-	{ // Starting up the game.
-		var map = new Spegularo.Map
-
-		// TODO
-		// SetInterval (function (){
-		//	while (!Spegularo.player.canPlay ())
-		//	 map.play ()
-		//	, interval)
-	}
-
 }(Spegularo))
 
 // This file is the last introduced in “Spegularo.js” and thus the last
