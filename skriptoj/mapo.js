@@ -25,7 +25,7 @@
 			{ n: "Map", o: function (){
 					// This function is the constructor of map.
 
-					var initialLevel = levels.testLevel // TODO: this is just temporary…
+					var initialLevel = Levels.testLevel // TODO: this is just temporary…
 
 					initialLevel.generate ()
 

@@ -21,16 +21,16 @@
 (function (Spegularo){
 	with (Spegularo){
 
-	createLevel ("testLevel", {
-			// TODO: This is just a test…
-			generate: function (){
-					Spegularo.LevelPrototype.generate.call (this)
+		createLevel ("testLevel", {
+				// TODO: This is just a test…
+				generate: function (){
+						LevelPrototype.generate.call (this)
 
-					for (var x = 10; x < 42; x++)
-						for (var y = 10; y < 12; y++)
-							this.map [x][y].o.push (Spegularo.objects.road ())
-				}
-		})
+						for (var x = 10; x < 42; x++)
+							for (var y = 10; y < 12; y++)
+								this.map [x][y].o.push (Objects.road ())
+					}
+			})
 
 	}
 }(Spegularo))

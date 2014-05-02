@@ -27,7 +27,7 @@
 var Spegularo = (function (){
 	var Spegularo
 
-	var sizeScreen = { x: 70, y: 30 }
+	var sizeScreen = { x: 120, y: 25 }
 
 	// Those objects, which will be initialised later on this file, will be used
 	// by other files of this project.
