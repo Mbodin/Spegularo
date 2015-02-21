@@ -34,6 +34,9 @@
 					return "Inventary:"
 				case "colon":
 					return ":"
+                default:
+                    internalError ("getText",
+                        "Unkown identifier “" + id + "”.")
 			}
 		}
 
@@ -45,6 +48,7 @@
 				])
 		}
 
+        synchronise ()
 	}
 }(Spegularo))
 

@@ -32,6 +32,7 @@
 					}
 			})
 
+        synchronise ()
 	}
 }(Spegularo))
 

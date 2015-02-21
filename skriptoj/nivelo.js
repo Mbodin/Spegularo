@@ -134,6 +134,7 @@
 				}
 			}])
 
+        synchronise ()
 	}
 }(Spegularo))
 

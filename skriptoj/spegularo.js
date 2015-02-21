@@ -76,7 +76,7 @@ var Spegularo = (function (){
 
 	// This object makes the interface with the messages (i.e. various errors).
 	// It contains the following methods:
-	//	— addMessages, taking a set of messages ({ d: message (string),
+	//	— addMessages, taking an array of messages ({ d: message (string),
 	//	 s: source of the message (facultative string) }) corresponding to the
 	//	 current turn and printing it, eventually removing the previous events of
 	//	 the interface.
@@ -221,7 +221,7 @@ var Spegularo = (function (){
 
 							messages.appendChild (node)
 
-							node.appendText (msg.d)
+							appendText (node, msg.d)
 						})
 				},
 			init: function (langObj){},
@@ -250,11 +250,12 @@ var Spegularo = (function (){
 							messages.appendChild (node)
 
 							if (msg.s){
-								node.appendText (msg.s)
-								node.appendText (lang.getText ("colon"))
-								node.appendText ("\t")
+								appendText (node, msg.s)
+								appendText (node, lang.getText ("colon"))
+								appendText (node, "\t")
 							}
-							node.appendText (msg.d)
+
+							appendText (node, msg.d)
 						})
 				},
 			init: function (langObj){
@@ -268,14 +269,17 @@ var Spegularo = (function (){
 										// This should only be used to report errors, not warnings.
 
 										var node = document.createElement ("li")
-				
-										errors.appendChild (node)
-										node.appendText (f)
-										node.appendText (lang.getText ("colon"))
-										node.appendText ("\t")
+
+										appendText (node, f)
+										appendText (node, lang.getText ("colon"))
+										appendText (node, "\t")
 										appendText (node, msg)
+
+										errors.appendChild (node)
 									} }
 						])
+
+                    Spegularo.Messages.addMessages ([]) // Eventually clearing the message stack.
 				},
 			quit: function (){
 					main.removeChild (messages)
@@ -302,9 +306,22 @@ var Spegularo = (function (){
 		messages = initMessages (mainId)
 	}
 
+	{ // Enpacking everything into the object “Spegularo”.
+		Spegularo = {
+				sizeScreen: sizeScreen,
+				Level: level,
+				Inventary: inventary,
+				Code: code,
+				Events: events,
+				Messages: messages
+			}
+	}
+
 	{ // Adding other JavaScript files from the project.
 		var directory = "skriptoj/"
 		var otherFiles = [
+                // Each of these file—except “ekludo”—should call the “synchronise”
+                // function in “Spegularo” when they finish executing.
 				"utilajxoj", // This file should always be the first one.
 				"lingvoj",
 				"koloroj",
@@ -326,26 +343,21 @@ var Spegularo = (function (){
 			script.setAttribute ("src", directory + otherFiles[i] + ".js")
 
 			if (i + 1 < otherFiles.length){
-				script.onload = function (){
+                if (Spegularo.iterArray) // This function is needed but may not be loaded yet.
+                    messages.addMessages ([{
+                            d: "Loading: " + Math.floor (100 * i / otherFiles.length) + "%"
+                        }])
+
+				Spegularo.synchronise = function (){
 						addScriptsFrom (i + 1)
 					}
-			}
+			} else
+                Spegularo.synchronise = function (){}
 
 			mainId.appendChild (script)
 		}
 
 		addScriptsFrom (0)
-	}
-
-	{ // Enpacking everything into the object “Spegularo”.
-		Spegularo = {
-				sizeScreen: sizeScreen,
-				Level: level,
-				Inventary: inventary,
-				Code: code,
-				Events: events,
-				Messages: messages
-			}
 	}
 
 	return Spegularo

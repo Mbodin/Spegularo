@@ -162,6 +162,7 @@
 					"ifObjectChanged"])
 		}
 
+        synchronise ()
 	}
 }(Spegularo))
 
